@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SWP Calculator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+</head>
+<style>
+     body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: hsl(236, 84%, 75%);
+  color: #333;
+}
+     form {
+     box-sizing: border-box;
+     max-width: 400px;
+     padding: 2rem;
+     border-radius: 1rem;
+     background-color: hsl(256, 87%, 85%);
+     border: 4px solid hsl(0, 0%, 90%);
+     margin-left:28em;
+   }
+
+   input[type="number"],
+   select {
+     height: 2rem;
+     width: 100%;
+     padding: 0.5rem;
+     font-size: 1rem;
+     border: 1px solid #ccc;
+   }
+
+   label {
+     display: block;
+     margin-bottom: 0.5rem;
+     font-weight: bold;
+   }
+
+   button[type="submit"] {
+     background-color: #4CAF50;
+     color: white;
+     padding: 0.6rem 1rem;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+     font-size: 1rem;
+   }
+
+   button[type="submit"]:hover {
+     background-color: #45a049;
+   }
+   h1{
+    margin-top:-25px;
+  font-weight: bold;
+  font-family:Georgia, 'Times New Roman', Times, serif
+   }
+</style>
+<body>
+  
+  <form id="swp-form" class="mt-5">
+    <h1>SWP Calculator</h1><br>
+    <label for="investment">Initial Investment:</label>
+    <input type="number" id="investment" required><br>
+
+    <label for="withdrawal">Withdrawal Amount:</label>
+    <input type="number" id="withdrawal" required><br>
+
+    <label for="frequency">Withdrawal Frequency:</label>
+    <select id="frequency" required>
+      <option value="monthly">Monthly</option>
+      <option value="quarterly">Quarterly</option>
+      <option value="yearly">Yearly</option>
+    </select><br>
+
+    <label for="rate">Annual Rate of Return (%):</label>
+    <input type="number" id="rate" required><br>
+
+    <label for="tenure">Tenure (Years):</label>
+    <input type="number" id="tenure" required><br>
+        <br>
+    <button type="submit">Calculate</button>
+    <div id="results"></div>
+  </form>
+
+  <script>
+    document.getElementById('swp-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const investment = parseFloat(document.getElementById('investment').value);
+      const withdrawal = parseFloat(document.getElementById('withdrawal').value);
+      const frequency = document.getElementById('frequency').value;
+      const rate = parseFloat(document.getElementById('rate').value) / 100;
+      const tenure = parseFloat(document.getElementById('tenure').value);
+
+      let totalWithdrawals = 0;
+      let remainingInvestment = investment;
+      let periods = 0;
+
+      switch (frequency) {
+        case 'monthly':
+          periods = tenure * 12;
+          break;
+        case 'quarterly':
+          periods = tenure * 4;
+          break;
+        case 'yearly':
+          periods = tenure;
+          break;
+      }
+
+      for (let i = 0; i < periods; i++) {
+        remainingInvestment = remainingInvestment * (1 + rate / periods) - withdrawal;
+        totalWithdrawals += withdrawal;
+      }
+
+      document.getElementById('results').innerHTML = `
+       <h5> Total Withdrawals: ${totalWithdrawals.toFixed(2)}<br>
+        Remaining Investment: ${remainingInvestment.toFixed(2)}<h5>
+      `;
+    });
+  </script>
+</body>
+</html>
